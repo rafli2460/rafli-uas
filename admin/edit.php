@@ -1,5 +1,5 @@
 <?php
-require_once '../includes/header.php';
+require_once __DIR__ . '/../config/init.php';
 
 // If user is not logged in, redirect to login page
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
@@ -86,7 +86,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($stmt_update = $mysqli->prepare($sql_update)) {
             $stmt_update->bind_param("sssi", $title, $content, $new_image_name, $post_id);
             if ($stmt_update->execute()) {
-                header("location: view.php?id=" . $post_id);
+                header("location: ../posts/view.php?id=" . $post_id);
                 exit();
             } else {
                 echo "Something went wrong. Please try again.";
@@ -96,39 +96,48 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     $mysqli->close();
 }
+require_once '../includes/header.php';
 ?>
 
-<div class="form-wrapper">
-    <h2>Edit Post</h2>
-    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . "?id=" . $post_id; ?>" method="post" enctype="multipart/form-data">
-        <div class="form-group">
-            <label>Title</label>
-            <input type="text" name="title" class="form-control" value="<?php echo htmlspecialchars($title); ?>">
-            <span class="invalid-feedback"><?php echo $title_err; ?></span>
-        </div>
-        <div class="form-group">
-            <label>Content</label>
-            <textarea name="content" class="form-control"><?php echo htmlspecialchars($content); ?></textarea>
-            <span class="invalid-feedback"><?php echo $content_err; ?></span>
-        </div>
-        <div class="form-group">
-            <label>Current Image</label>
-            <div>
-                <?php if (!empty($current_image)): ?>
-                    <img src="../uploads/<?php echo htmlspecialchars($current_image); ?>" width="200">
-                <?php else: ?>
-                    <p>No image uploaded.</p>
-                <?php endif; ?>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card mt-5">
+                <div class="card-body">
+                    <h2 class="card-title text-center">Edit Post</h2>
+                    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . "?id=" . $post_id; ?>" method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Title</label>
+                            <input type="text" name="title" id="title" class="form-control <?php echo (!empty($title_err)) ? 'is-invalid' : ''; ?>" value="<?php echo htmlspecialchars($title); ?>">
+                            <div class="invalid-feedback"><?php echo $title_err; ?></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="content" class="form-label">Content</label>
+                            <textarea name="content" id="content" class="form-control <?php echo (!empty($content_err)) ? 'is-invalid' : ''; ?>"><?php echo htmlspecialchars($content); ?></textarea>
+                            <div class="invalid-feedback"><?php echo $content_err; ?></div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Current Image</label>
+                            <div>
+                                <?php if (!empty($current_image)): ?>
+                                    <img src="../uploads/<?php echo htmlspecialchars($current_image); ?>" class="img-fluid rounded" style="max-width: 200px;">
+                                <?php else: ?>
+                                    <p>No image uploaded.</p>
+                                <?php endif; ?>
+                            </div>
+                            <label for="image" class="form-label mt-3">Upload New Image (optional)</label>
+                            <input type="file" name="image" id="image" class="form-control <?php echo (!empty($image_err)) ? 'is-invalid' : ''; ?>">
+                            <div class="invalid-feedback"><?php echo $image_err; ?></div>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <input type="submit" class="btn btn-primary" value="Save Changes">
+                            <a href="../posts/view.php?id=<?php echo $post_id; ?>" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <label style="margin-top: 10px;">Upload New Image (optional)</label>
-            <input type="file" name="image" class="form-control">
-            <span class="invalid-feedback"><?php echo $image_err; ?></span>
         </div>
-        <div class="form-group">
-            <input type="submit" class="btn btn-primary" value="Save Changes">
-            <a href="view.php?id=<?php echo $post_id; ?>" class="btn btn-secondary">Cancel</a>
-        </div>
-    </form>
+    </div>
 </div>
 
 <?php require_once '../includes/footer.php'; ?>

@@ -1,6 +1,5 @@
 <?php
-require_once '../config/database.php'; // We only need db connection and session
-session_start();
+require_once __DIR__ . '/../config/init.php';
 
 // If user is not logged in, redirect
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {

@@ -1,5 +1,5 @@
 <?php
-require_once '../includes/header.php';
+require_once __DIR__ . '/../config/init.php';
 
 // If user is not logged in, redirect to login page
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
@@ -79,32 +79,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     $mysqli->close();
 }
+require_once '../includes/header.php';
 ?>
 
-<div class="form-wrapper">
-    <h2>Create New Post</h2>
-    <p>Share your culinary masterpiece with the world!</p>
-    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data">
-        <div class="form-group">
-            <label>Title</label>
-            <input type="text" name="title" class="form-control" value="<?php echo $title; ?>">
-            <span class="invalid-feedback"><?php echo $title_err; ?></span>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card mt-5">
+                <div class="card-body">
+                    <h2 class="card-title text-center">Create New Post</h2>
+                    <p class="card-text text-center">Share your culinary masterpiece with the world!</p>
+                    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Title</label>
+                            <input type="text" name="title" id="title" class="form-control <?php echo (!empty($title_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $title; ?>">
+                            <div class="invalid-feedback"><?php echo $title_err; ?></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="content" class="form-label">Content</label>
+                            <textarea name="content" id="content" class="form-control <?php echo (!empty($content_err)) ? 'is-invalid' : ''; ?>"><?php echo $content; ?></textarea>
+                            <div class="invalid-feedback"><?php echo $content_err; ?></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="image" class="form-label">Featured Image</label>
+                            <input type="file" name="image" id="image" class="form-control <?php echo (!empty($image_err)) ? 'is-invalid' : ''; ?>">
+                            <div class="invalid-feedback"><?php echo $image_err; ?></div>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <input type="submit" class="btn btn-primary" value="Publish Post">
+                            <a href="../dashboard.php" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            <label>Content</label>
-            <textarea name="content" class="form-control"><?php echo $content; ?></textarea>
-            <span class="invalid-feedback"><?php echo $content_err; ?></span>
-        </div>
-        <div class="form-group">
-            <label>Featured Image</label>
-            <input type="file" name="image" class="form-control">
-            <span class="invalid-feedback"><?php echo $image_err; ?></span>
-        </div>
-        <div class="form-group">
-            <input type="submit" class="btn btn-primary" value="Publish Post">
-            <a href="../dashboard.php" class="btn btn-secondary">Cancel</a>
-        </div>
-    </form>
+    </div>
 </div>
 
 <?php require_once '../includes/footer.php'; ?>

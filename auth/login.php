@@ -1,16 +1,11 @@
 <?php
-// Initialize the session
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
+require_once __DIR__ . '/../config/init.php';
  
 // Check if the user is already logged in, if yes then redirect him to dashboard page
 if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
     header("location: ../dashboard.php");
     exit;
 }
- 
-require_once '../includes/header.php';
  
 $username = $password = "";
 $username_err = $password_err = $login_err = "";
@@ -46,19 +41,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $stmt->bind_result($id, $username, $hashed_password, $role);
                     if ($stmt->fetch()) {
                         if (password_verify($password, $hashed_password)) {
-                            // Password is correct, so start a new session
-                            session_start();
-                            
-                            // Store data in session variables
                             $_SESSION["loggedin"] = true;
                             $_SESSION["id"] = $id;
                             $_SESSION["username"] = $username;
                             $_SESSION["role"] = $role;                            
                             
-                            // Redirect user to dashboard page
                             header("location: ../dashboard.php");
                         } else {
-                            // Password is not valid
                             $login_err = "Invalid username or password.";
                         }
                     }
@@ -75,34 +64,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     $mysqli->close();
 }
+require_once '../includes/header.php';
 ?>
- 
-<div class="form-wrapper">
-    <h2>Login</h2>
-    <p>Please fill in your credentials to login.</p>
 
-    <?php 
-    if (!empty($login_err)) {
-        echo '<div class="alert alert-danger">' . $login_err . '</div>';
-    }        
-    ?>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card mt-5">
+                <div class="card-body">
+                    <h2 class="card-title text-center">Login</h2>
+                    <p class="card-text text-center">Please fill in your credentials to login.</p>
 
-    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-        <div class="form-group">
-            <label>Username</label>
-            <input type="text" name="username" class="form-control <?php echo (!empty($username_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $username; ?>">
-            <span class="invalid-feedback"><?php echo $username_err; ?></span>
-        </div>    
-        <div class="form-group">
-            <label>Password</label>
-            <input type="password" name="password" class="form-control <?php echo (!empty($password_err)) ? 'is-invalid' : ''; ?>">
-            <span class="invalid-feedback"><?php echo $password_err; ?></span>
+                    <?php 
+                    if (!empty($login_err)) {
+                        echo '<div class="alert alert-danger">' . $login_err . '</div>';
+                    }        
+                    ?>
+
+                    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" name="username" id="username" class="form-control <?php echo (!empty($username_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $username; ?>">
+                            <div class="invalid-feedback"><?php echo $username_err; ?></div>
+                        </div>    
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" name="password" id="password" class="form-control <?php echo (!empty($password_err)) ? 'is-invalid' : ''; ?>">
+                            <div class="invalid-feedback"><?php echo $password_err; ?></div>
+                        </div>
+                        <div class="d-grid">
+                            <input type="submit" class="btn btn-primary" value="Login">
+                        </div>
+                        <p class="mt-3 text-center">Don't have an account? <a href="register.php">Sign up now</a>.</p>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            <input type="submit" class="btn btn-primary" value="Login">
-        </div>
-        <p>Don't have an account? <a href="register.php">Sign up now</a>.</p>
-    </form>
+    </div>
 </div>
  
 <?php require_once '../includes/footer.php'; ?>

@@ -8,14 +8,14 @@ body {
 }
 
 /* Main Container */
-.container {
+/* .container {
     max-width: 960px;
     margin: 20px auto;
     padding: 0 20px;
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
+} */
 
 /* Header and Navigation */
 .header {
@@ -58,7 +58,7 @@ h1, h2, h3 {
 }
 
 /* Forms */
-.form-wrapper {
+/* .form-wrapper {
     padding: 30px;
     margin-top: 20px;
 }
@@ -81,16 +81,16 @@ h1, h2, h3 {
     padding: 10px;
     border: 1px solid #ced4da;
     border-radius: 4px;
-    box-sizing: border-box; /* Important */
+    box-sizing: border-box; 
 }
 
 .form-group textarea {
     min-height: 150px;
     resize: vertical;
-}
+} */
 
 /* Buttons */
-.btn {
+/* .btn {
     display: inline-block;
     padding: 10px 20px;
     font-size: 1rem;
@@ -120,7 +120,7 @@ h1, h2, h3 {
 .btn-danger {
     background-color: #dc3545;
     color: #fff;
-}
+} */
 
 /* Alerts */
 .alert {

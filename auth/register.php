@@ -1,5 +1,5 @@
 <?php
-require_once '../includes/header.php';
+require_once __DIR__ . '/../config/init.php';
 
 $username = "";
 $password = "";
@@ -71,37 +71,46 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     $mysqli->close();
 }
+require_once '../includes/header.php';
 ?>
 
-<div class="form-wrapper">
-    <h2>Register</h2>
-    <p>Please fill this form to create an account.</p>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card mt-5">
+                <div class="card-body">
+                    <h2 class="card-title text-center">Register</h2>
+                    <p class="card-text text-center">Please fill this form to create an account.</p>
 
-    <?php 
-    if(!empty($register_err)){
-        echo '<div class="alert alert-danger">' . $register_err . '</div>';
-    }        
-    if(!empty($success_msg)){
-        echo '<div class="alert alert-success">' . $success_msg . '</div>';
-    }
-    ?>
+                    <?php 
+                    if(!empty($register_err)){
+                        echo '<div class="alert alert-danger">' . $register_err . '</div>';
+                    }        
+                    if(!empty($success_msg)){
+                        echo '<div class="alert alert-success">' . $success_msg . '</div>';
+                    }
+                    ?>
 
-    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-        <div class="form-group">
-            <label>Username</label>
-            <input type="text" name="username" class="form-control <?php echo (!empty($username_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $username; ?>">
-            <span class="invalid-feedback"><?php echo $username_err; ?></span>
-        </div>    
-        <div class="form-group">
-            <label>Password</label>
-            <input type="password" name="password" class="form-control <?php echo (!empty($password_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $password; ?>">
-            <span class="invalid-feedback"><?php echo $password_err; ?></span>
+                    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" name="username" id="username" class="form-control <?php echo (!empty($username_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $username; ?>">
+                            <div class="invalid-feedback"><?php echo $username_err; ?></div>
+                        </div>    
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" name="password" id="password" class="form-control <?php echo (!empty($password_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $password; ?>">
+                            <div class="invalid-feedback"><?php echo $password_err; ?></div>
+                        </div>
+                        <div class="d-grid">
+                            <input type="submit" class="btn btn-primary" value="Submit">
+                        </div>
+                        <p class="mt-3 text-center">Already have an account? <a href="login.php">Login here</a>.</p>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            <input type="submit" class="btn btn-primary" value="Submit">
-        </div>
-        <p>Already have an account? <a href="login.php">Login here</a>.</p>
-    </form>
+    </div>
 </div>
 
 <?php require_once '../includes/footer.php'; ?>
