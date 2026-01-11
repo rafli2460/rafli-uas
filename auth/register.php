@@ -5,6 +5,7 @@ $username = "";
 $password = "";
 $username_err = "";
 $password_err = "";
+$confirm_password_err = "";
 $register_err = "";
 $success_msg = "";
 
@@ -45,29 +46,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $password = trim($_POST["password"]);
     }
-    
-    // Check input errors before inserting in database
-    if (empty($username_err) && empty($password_err) && empty($register_err)) {
-        // Prepare an insert statement
-        $sql = "INSERT INTO users (username, password) VALUES (?, ?)";
-         
-        if ($stmt = $mysqli->prepare($sql)) {
-            $stmt->bind_param("ss", $param_username, $param_password);
-            
-            $param_username = $username;
-            $param_password = password_hash($password, PASSWORD_DEFAULT); // Creates a password hash
-            
-            if ($stmt->execute()) {
-                $success_msg = "Registration successful! You can now <a href='login.php'>login</a>.";
-                // Clear form fields
-                $username = "";
-                $password = "";
-            } else {
-                $register_err = "Something went wrong. Please try again later.";
-            }
-            $stmt->close();
+
+    if (empty(trim($_POST["confirm_password"]))) {
+        $confirm_password_err = "Please confirm password";
+    } else {
+        if (empty($password_err) && ($password != trim($_POST["confirm_password"]))) {
+            $confirm_password_err = "Password did not match";
         }
     }
+
+    if (empty($username_err) && empty($password_err) && empty($confirm_password_err) && empty($register_err)) {
+    $sql = "INSERT INTO users (username, password) VALUES (?, ?)";
+     
+    if ($stmt = $mysqli->prepare($sql)) {
+        $stmt->bind_param("ss", $param_username, $param_password);
+        
+        $param_username = $username;
+        $param_password = password_hash($password, PASSWORD_DEFAULT); // Creates a password hash
+        
+        if ($stmt->execute()) {
+            $success_msg = "Registration successful! You can now <a href='login.php'>login</a>.";
+            $username = "";
+            $password = "";
+            header("location: login.php?registration=success");
+            exit();
+            
+        } else {
+            $register_err = "Something went wrong. Please try again later.";
+        }
+        $stmt->close();
+    }
+}
     
     $mysqli->close();
 }
@@ -102,6 +111,12 @@ require_once '../includes/header.php';
                             <input type="password" name="password" id="password" class="form-control <?php echo (!empty($password_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $password; ?>">
                             <div class="invalid-feedback"><?php echo $password_err; ?></div>
                         </div>
+                        <div>
+                            <label for="password" class="form-label">Confirm Password</label>
+                            <input type="password" name="confirm_password" id="confirm_password" class="form-control <?php echo (!empty($confirm_password_err)) ? 'is-invalid' : ''; ?>">
+                            <div class="invalid-feedback"><?php echo $confirm_password_err; ?></div>
+                        </div>
+                        <br>
                         <div class="d-grid">
                             <input type="submit" class="btn btn-primary" value="Submit">
                         </div>

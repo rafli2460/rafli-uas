@@ -81,6 +81,10 @@ require_once '../includes/header.php';
                     }        
                     ?>
 
+                    <?php if(isset($_GET["registration"]) && $_GET["registration"] == 'success'): ?>
+                        <div class="alert alert-success">Registration successful! Please log in.</div>
+                    <?php endif; ?>
+                    
                     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
                         <div class="mb-3">
                             <label for="username" class="form-label">Username</label>
