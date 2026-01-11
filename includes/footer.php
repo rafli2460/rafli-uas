@@ -1,6 +1,6 @@
 </main> <!-- /.container -->
 
-<footer class="bg-dark text-white text-center p-4 mt-5">
+<footer class="bg-dark text-white text-center p-2 mt-auto">
     <div class="container">
         <p>&copy; <?php echo date("Y"); ?> Culinary Blog. All Rights Reserved.</p>
     </div>
